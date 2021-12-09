@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Wall</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style2.css' %}">
+    <script src="{% static 'js/script.js' %}"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div id="wrapper1">
+        <div id="header">
+            <h1>CodingDojo Wall</h1>
+            <div id="welcome">
+                <h3>Welcome, {{user.first_name}} </h3>
+                <a id="logout" href="/logout">log out</a>
+            </div>
+        </div>
+        <div id="wrapper3">
+            <form action="/post_message" method="post">
+                {% csrf_token %}
+                <label for="message">Post a message</label>
+                <textarea name="message" class="enter_message" placeholder="Write message here" rows="8"></textarea>
+                <div class="submit">
+                    <input type="submit" class="submit_message" value="Post message">
+                </div>
+            </form>
+            {% for message in messages %}
+                <h5>{{message.user.first_name}} {{message.user.last_name}} - {{ message.date|date:"F jS, Y" }}</h5>
+                <p class="inline_block"> {{message.body}}</p>
+                {% if message.deletable %} 
+                    <a href="/delete_message/{{message.id}}"> - (delete)</a>
+                {% endif %}
+                {% for comment in message.message_comments.all %}
+                    <h5 class="comment"> {{comment.user.first_name}} {{comment.user.last_name}} {{comment.date|date:"M jS, Y" }} </h5>
+                    <p class="comment inline_block"> {{comment.body}}</p>
+                    {% if comment.deletable %} 
+                        <a href="/delete_comment/{{comment.id}}"> - (delete)</a>
+                    {% endif %}
+                {% endfor %}
+                <form action="/post_comment/{{message.id}}" method="post">
+                    {% csrf_token %}
+                    <label class="shorter comment" for="comment">Post a comment</label>
+                    <textarea name="comment" class="shorter comment" placeholder="Write comment here" rows="3"></textarea>
+                    <div class="submit">
+                        <input type="submit" class="comment submit_comment" value="Post comment">
+                    </div>
+                </form>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
+
+
+{% comment %} 
+
+{% endcomment %}
+
